@@ -1,24 +1,17 @@
 #pragma once
 
-#include <memory>
-#include <THPP/THPP.h>
-
-#include "torch/csrc/autograd/function.h"
-#include "torch/csrc/autograd/variable.h"
+#include <torch/csrc/autograd/function.h>
+#include <torch/csrc/autograd/variable.h>
+#include <torch/csrc/WindowsTorchApiMacro.h>
 
 namespace torch { namespace autograd {
 
-struct AccumulateGrad : public Function {
-  AccumulateGrad(std::shared_ptr<Variable> variable);
+struct TORCH_API AccumulateGrad : public Node {
+  explicit AccumulateGrad(Variable variable_);
 
-  virtual variable_list apply(const variable_list& inputs) override;
-  void acc_inplace(std::shared_ptr<Variable>& grad,
-    std::shared_ptr<Variable>& new_grad);
+  variable_list apply(variable_list&& grads) override;
 
-  std::weak_ptr<Variable> variable;
-  std::weak_ptr<Variable> variable_grad;
+  Variable variable;
 };
 
-}}
-
-
+}} // namespace torch::autograd
